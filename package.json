@@ -5,9 +5,16 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "start:reset": "react-native start --reset-cache",
+    "test": "jest",
+    "clean:android": "cd android && ./gradlew clean && cd ..",
+    "clean": "rimraf --glob **/node_modules yarn.lock",
+    "lint": "eslint .",
+    "lint:fix": "eslint \"**/*.{js,ts,tsx}\" --fix",
+    "format:write": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache",
+    "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.6.1",
