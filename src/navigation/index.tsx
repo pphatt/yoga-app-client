@@ -3,14 +3,17 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from '../screens/home';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {BottomBarParamList, RootStackParamList} from './types';
-import MCIIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import MIIcon from 'react-native-vector-icons/MaterialIcons';
 import BookmarkScreen from '../screens/bookmark';
 import ProfileScreen from '../screens/profile';
 import SearchScreen from '../screens/search';
 import {TouchableOpacity} from 'react-native';
-import {BottomNavigation, useTheme} from 'react-native-paper';
+import {MCIIcon, MIIcon} from '../components/icons';
+import {TouchableRipple, useTheme} from 'react-native-paper';
 import {CommonActions} from '@react-navigation/native';
+
+import BottomNavigation from '../components/core/bottom-navigation/BottomNavigation';
+
+import color from 'color';
 
 const AppStack = createNativeStackNavigator<RootStackParamList>();
 const BottomBar = createBottomTabNavigator<BottomBarParamList>();
@@ -24,7 +27,7 @@ function BottomBarTab() {
       screenOptions={() => ({
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: 'red',
+          height: 60,
         },
         tabBarLabelStyle: {
           marginBottom: 5,
@@ -35,6 +38,7 @@ function BottomBarTab() {
       })}
       tabBar={({navigation, state, descriptors, insets}) => (
         <BottomNavigation.Bar
+          theme={theme}
           navigationState={state}
           safeAreaInsets={insets}
           style={{
@@ -56,11 +60,19 @@ function BottomBarTab() {
               });
             }
           }}
-          renderIcon={({route, focused, color}) => {
+          renderIcon={({route, focused, color: iconColor}) => {
             const {options} = descriptors[route.key];
 
             if (options.tabBarIcon) {
-              return options.tabBarIcon({focused, color, size: 24});
+              return (
+                <TouchableRipple
+                  rippleColor={color(theme.colors.surfaceVariant)
+                    .alpha(0.12)
+                    .rgb()
+                    .string()}>
+                  {options.tabBarIcon({focused, color: iconColor, size: 24})}
+                </TouchableRipple>
+              );
             }
 
             return null;
@@ -143,7 +155,7 @@ function BottomBarTab() {
             return (
               <MCIIcon
                 size={size}
-                name={focused ? 'account' : 'account-outline'}
+                name={focused ? 'account-circle' : 'account-circle-outline'}
                 color={color}
               />
             );

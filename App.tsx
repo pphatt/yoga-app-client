@@ -8,26 +8,33 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import AppNavigation from './src/navigation';
-import {MD3LightTheme, MD3Theme, PaperProvider} from 'react-native-paper';
-
-const theme: MD3Theme = {
-  ...MD3LightTheme,
-  // Specify custom property
-  colors: {
-    ...MD3LightTheme.colors,
-    surfaceVariant: '#E4D5F8',
-    secondaryContainer: '#C9B0E6',
-    onSecondaryContainer: '#7B46AF',
-    elevation: {
-      ...MD3LightTheme.colors.elevation,
-      level1: 'aquamarine',
-    },
-  },
-};
+import {PaperProvider} from 'react-native-paper';
+import {StatusBar, useColorScheme} from 'react-native';
+import {isAndroid} from './src/utils/index.utils';
+import {darkTheme, lightTheme} from './src/shared/theme/theme.ts';
 
 export default function App(): React.JSX.Element {
+  const scheme = useColorScheme();
+  const isDarkMode = scheme === 'dark';
+
+  React.useEffect(() => {
+    StatusBar.setBarStyle(isDarkMode ? 'light-content' : 'dark-content');
+    if (isAndroid()) {
+      StatusBar.setBackgroundColor('rgba(0,0,0,0)');
+      StatusBar.setTranslucent(true);
+    }
+
+    setTimeout(() => {
+      // SplashScreen.hide();
+    }, 750);
+  }, [scheme, isDarkMode]);
+
   return (
-    <PaperProvider theme={theme}>
+    <PaperProvider
+      theme={isDarkMode ? darkTheme : lightTheme}
+      settings={{
+        rippleEffectEnabled: true,
+      }}>
       <NavigationContainer>
         <AppNavigation />
       </NavigationContainer>
